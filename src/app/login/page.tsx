@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AUTH_KEY } from '@/lib/constants';
 import { useToast } from '@/hooks/use-toast';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { flux } from '@/lib/flux/client';
 
 // Schema for Super Admin: email and password
@@ -26,6 +27,7 @@ export default function LoginPage() {
     const router = useRouter();
     const { toast } = useToast();
     const [isClient, setIsClient] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -48,7 +50,7 @@ export default function LoginPage() {
             // We are only checking if the user exists. We are NOT verifying the password.
             // This should be replaced with Supabase Auth or an Edge Function for a real application.
             const safeEmail = data.email.replace(/'/g, "''");
-            const query = `SELECT id FROM super_admins WHERE email = '${safeEmail}' LIMIT 1`;
+            const query = `SELECT id, password_hash FROM super_admins WHERE email = '${safeEmail}' LIMIT 1`;
             const { rows: admins, error } = await flux.sql(query);
             const admin = admins?.[0];
 
@@ -65,8 +67,8 @@ export default function LoginPage() {
                 return;
             }
 
-            if (admin) {
-                // WARNING: Password is NOT checked. Granting access based on email existence only.
+            if (admin && admin.password_hash === data.password) {
+                // Password matches! 
                 localStorage.setItem(AUTH_KEY, 'true');
 
                 toast({
@@ -129,13 +131,30 @@ export default function LoginPage() {
                                 <Lock size={16} className="text-primary" />
                                 Password
                             </Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                {...register('password')}
-                                className={errors.password ? 'border-destructive' : ''}
-                            />
+                            <div className="relative group">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    {...register('password')}
+                                    className={cn(
+                                        "pr-10",
+                                        errors.password ? "border-destructive" : ""
+                                    )}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff size={18} />
+                                    ) : (
+                                        <Eye size={18} />
+                                    )}
+                                </button>
+                            </div>
                             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
                         </div>
                         <Button type="submit" className="w-full h-12 text-lg" disabled={isSubmitting}>
