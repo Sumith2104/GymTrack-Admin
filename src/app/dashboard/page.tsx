@@ -258,21 +258,46 @@ export default function DashboardPage() {
     };
 
     const handleDeleteGyms = async (gymIdsToDelete: string[]) => {
-        const cleanIds = gymIdsToDelete.map(id => `'${id.replace(/'/g, "''")}'`).join(',');
-        const query = `DELETE FROM gyms WHERE id IN (${cleanIds})`;
-        const { error } = await flux.sql(query);
+        let hasError = false;
+        let errorMessage = "";
+        const successfullyDeletedIds: string[] = [];
 
-        if (error) {
+        const deletePromises = gymIdsToDelete.map(async (id) => {
+            const cleanId = id.replace(/'/g, "''");
+
+            // Cascade delete related records concurrently for this gym
+            await Promise.all([
+                flux.sql(`DELETE FROM check_ins WHERE gym_id = '${cleanId}'`),
+                flux.sql(`DELETE FROM members WHERE gym_id = '${cleanId}'`),
+                flux.sql(`DELETE FROM plans WHERE gym_id = '${cleanId}'`),
+                flux.sql(`DELETE FROM announcements WHERE gym_id = '${cleanId}'`)
+            ]);
+
+            const query = `DELETE FROM gyms WHERE id = '${cleanId}'`;
+            const { error } = await flux.sql(query);
+            if (error) {
+                hasError = true;
+                errorMessage = error.message;
+            } else {
+                successfullyDeletedIds.push(id);
+            }
+        });
+
+        await Promise.all(deletePromises);
+
+        if (successfullyDeletedIds.length > 0) {
+            setGyms((prevGyms) => prevGyms.filter(gym => !successfullyDeletedIds.includes(gym.id)));
             toast({
-                title: "Delete Failed",
-                description: `Could not delete gym(s) from the database: ${error.message}`,
-                variant: "destructive",
-            });
-        } else {
-            setGyms((prevGyms) => prevGyms.filter(gym => !gymIdsToDelete.includes(gym.id)));
-            toast({
-                title: `${gymIdsToDelete.length} Gym(s) Deleted`,
+                title: `${successfullyDeletedIds.length} Gym(s) Deleted`,
                 description: "Selected gym(s) have been permanently removed from the database.",
+            });
+        }
+
+        if (hasError) {
+            toast({
+                title: "Some Deletes Failed",
+                description: `Could not delete all selected gym(s): ${errorMessage}`,
+                variant: "destructive",
             });
         }
     };
