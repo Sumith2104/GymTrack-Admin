@@ -1,0 +1,35 @@
+
+> nextn@0.1.0 typecheck
+> tsc --noEmit
+
+src/app/dashboard/gym/[gymId]/page.tsx(131,123): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(133,79): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/app/dashboard/gym/[gymId]/page.tsx(153,117): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(158,127): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(169,141): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(207,30): error TS18048: 'dataToUpsert.plan_name' is possibly 'undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(236,31): error TS18048: 'dataToUpsert.title' is possibly 'undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(237,33): error TS18048: 'dataToUpsert.content' is possibly 'undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(374,124): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/gym/[gymId]/page.tsx(550,17): error TS2322: Type 'boolean | undefined' is not assignable to type 'boolean'.
+  Type 'undefined' is not assignable to type 'boolean'.
+src/app/dashboard/page.tsx(58,21): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(85,58): error TS7006: Parameter 'gym' implicitly has an 'any' type.
+src/app/dashboard/page.tsx(94,28): error TS7006: Parameter 'g' implicitly has an 'any' type.
+src/app/dashboard/page.tsx(153,21): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(179,55): error TS2339: Property 'price' does not exist on type 'Member'.
+src/app/dashboard/page.tsx(179,78): error TS2339: Property 'price' does not exist on type 'Member'.
+src/app/dashboard/page.tsx(179,107): error TS2339: Property 'price' does not exist on type 'Member'.
+src/app/dashboard/page.tsx(212,17): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(371,147): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(377,21): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(383,21): error TS2322: Type '"info"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/app/dashboard/page.tsx(394,17): error TS2322: Type '"info"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/components/dashboard/AddEditAnnouncementDialog.tsx(54,78): error TS2339: Property 'message' does not exist on type 'Announcement'.
+src/components/dashboard/AnnouncementsTable.tsx(34,11): error TS2339: Property 'message' does not exist on type 'Announcement'.
+src/components/dashboard/AnnouncementsTable.tsx(89,44): error TS2339: Property 'message' does not exist on type 'Announcement'.
+src/components/dashboard/GymRequestsDialog.tsx(115,173): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/components/dashboard/GymRequestsDialog.tsx(127,136): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/components/dashboard/GymRequestsDialog.tsx(169,143): error TS2322: Type '"warning"' is not assignable to type '"default" | "destructive" | null | undefined'.
+src/components/dashboard/PlansTable.tsx(95,36): error TS2339: Property 'duration_months' does not exist on type 'Plan'.
+src/components/dashboard/PlansTable.tsx(95,62): error TS2339: Property 'duration_months' does not exist on type 'Plan'.

@@ -55,7 +55,7 @@ export default function DashboardPage() {
                     description: isNetworkError
                         ? 'Could not connect to the database. Please check your internet connection and Supabase URL/key configuration. Trying local cache.'
                         : `Database error: ${supabaseError.message || 'Details in console'}. Trying local cache.`,
-                    variant: 'warning',
+                    variant: 'destructive',
                 });
 
                 const storedGyms = localStorage.getItem(GYMS_KEY);
@@ -72,7 +72,7 @@ export default function DashboardPage() {
                                 status: (item.status === 'active' || item.status === 'inactive' || item.status === 'inactive soon') ? item.status : 'active',
                                 activeMembersCount: Number(item.activeMembersCount || 0),
                                 monthlyRevenue: Number(item.monthlyRevenue || 0),
-                            })).filter(gym => gym.id && gym.name);
+                            })).filter((gym: any) => gym.id && gym.name);
                         } else {
                             console.warn("Gyms data in localStorage is not an array or is invalid.");
                         }
@@ -82,7 +82,7 @@ export default function DashboardPage() {
                     }
                 }
             } else if (fetchedSupabaseGyms) {
-                finalGymsToSet = fetchedSupabaseGyms.map(gym => ({
+                finalGymsToSet = fetchedSupabaseGyms.map((gym: any) => ({
                     id: String(gym.id || ''),
                     name: String(gym.name || ''),
                     ownerEmail: String(gym.owner_email || ''),
@@ -91,7 +91,7 @@ export default function DashboardPage() {
                     status: (gym.status === 'active' || gym.status === 'inactive' || gym.status === 'inactive soon') ? gym.status : 'active',
                     activeMembersCount: 0,
                     monthlyRevenue: 0,
-                })).filter(g => g.id && g.name);
+                })).filter((g: any) => g.id && g.name);
 
                 localStorage.setItem(GYMS_KEY, JSON.stringify(finalGymsToSet));
             }
@@ -150,7 +150,7 @@ export default function DashboardPage() {
                 toast({
                     title: 'Error Fetching Member Stats',
                     description: `Could not load member statistics: ${error.message}. Stats may be inaccurate.`,
-                    variant: 'warning',
+                    variant: 'destructive',
                 });
                 setTotalActiveMembers(0);
                 setGyms(prevGymsState => {
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                     const newGymsWithStats = prevGymsState.map(gym => {
                         let gymActiveMembersCount = 0;
                         let gymMonthlyRevenue = 0;
-                        membersData.forEach((member: Member) => {
+                        membersData.forEach((member: any) => {
                             if (member.gym_id === gym.id) {
                                 gymActiveMembersCount++;
                                 const price = (member.price && typeof member.price === 'number') ? member.price : 0;
@@ -209,7 +209,7 @@ export default function DashboardPage() {
             toast({
                 title: 'Error Fetching Member Stats',
                 description: `Could not load member statistics: ${errorMessage}. Stats may be inaccurate.`,
-                variant: 'warning',
+                variant: 'destructive',
             });
             setTotalActiveMembers(0);
             setGyms(prevGymsState => {
@@ -368,19 +368,19 @@ export default function DashboardPage() {
                 toast({ title: "Owner Notifications Sent", description: `Successfully notified ${emailSuccessCount} gym owner(s).` });
             }
             if ((newStatus === 'inactive' || newStatus === 'inactive soon') && emailFailCount > 0) {
-                toast({ title: "Some Owner Notifications Failed", description: `Failed to notify ${emailFailCount} gym owner(s). Check console.`, variant: "warning" });
+                toast({ title: "Some Owner Notifications Failed", description: `Failed to notify ${emailFailCount} gym owner(s). Check console.`, variant: "destructive" });
             }
             if (successDbCount === 0 && failDbCount === 0 && gymIdsToUpdate.length > 0) {
                 toast({
                     title: "Status Update Attempted",
                     description: "No changes made. Gyms may have already been in the target status or an issue occurred.",
-                    variant: "warning",
+                    variant: "default",
                 });
             } else if (gymIdsToUpdate.length === 0) {
                 toast({
                     title: "No Gyms Selected",
                     description: "Please select gyms to update their status.",
-                    variant: "info",
+                    variant: "default",
                 });
             }
         });
@@ -391,7 +391,7 @@ export default function DashboardPage() {
             toast({
                 title: "No Gyms Selected",
                 description: "Please select gyms to send emails.",
-                variant: "info",
+                variant: "default",
             });
             return;
         }

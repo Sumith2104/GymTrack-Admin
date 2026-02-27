@@ -23,7 +23,7 @@ import { Loader2, Save } from 'lucide-react';
 
 const announcementSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title is too long'),
-  message: z.string().min(1, 'Message is required').max(1000, 'Message is too long'),
+  content: z.string().min(1, 'Message is required').max(1000, 'Message is too long'),
 });
 
 type AnnouncementFormInputs = z.infer<typeof announcementSchema>;
@@ -45,15 +45,15 @@ export function AddEditAnnouncementDialog({ isOpen, onOpenChange, onSave, isSavi
   } = useForm<AnnouncementFormInputs>({
     resolver: zodResolver(announcementSchema),
   });
-  
+
   const isEditMode = !!announcementToEdit;
 
   useEffect(() => {
     if (isOpen) {
       if (isEditMode) {
-        reset({ title: announcementToEdit.title, message: announcementToEdit.message });
+        reset({ title: announcementToEdit.title, content: announcementToEdit.content });
       } else {
-        reset({ title: '', message: '' });
+        reset({ title: '', content: '' });
       }
     }
   }, [isOpen, isEditMode, announcementToEdit, reset]);
@@ -90,22 +90,22 @@ export function AddEditAnnouncementDialog({ isOpen, onOpenChange, onSave, isSavi
             {errors.title && <p className="text-sm text-destructive mt-1">{errors.title.message}</p>}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="message">Message</Label>
+            <Label htmlFor="content">Message</Label>
             <Textarea
-              id="message"
-              {...register('message')}
-              className={`min-h-[120px] ${errors.message ? 'border-destructive' : ''}`}
+              id="content"
+              {...register('content')}
+              className={`min-h-[120px] ${errors.content ? 'border-destructive' : ''}`}
               placeholder="Enter the announcement details here."
               disabled={isSaving}
             />
-            {errors.message && <p className="text-sm text-destructive mt-1">{errors.message.message}</p>}
+            {errors.content && <p className="text-sm text-destructive mt-1">{errors.content.message}</p>}
           </div>
           <DialogFooter className="mt-2">
             <DialogClose asChild>
               <Button type="button" variant="outline" disabled={isSaving}>Cancel</Button>
             </DialogClose>
             <Button type="submit" disabled={isSaving}>
-              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save size={18} className="mr-2"/>}
+              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save size={18} className="mr-2" />}
               Save
             </Button>
           </DialogFooter>

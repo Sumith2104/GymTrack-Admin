@@ -128,9 +128,9 @@ export default function GymDetailPage() {
             setIsLoading(prev => ({ ...prev, gym: false }));
 
             // Members
-            if (membersResult.error) { toast({ title: "Error Fetching Members", description: membersResult.error.message, variant: "warning" }); }
+            if (membersResult.error) { toast({ title: "Error Fetching Members", description: membersResult.error.message, variant: "destructive" }); }
             else {
-                const typedMembers: Member[] = (membersResult.rows || []).map(m => ({
+                const typedMembers: Member[] = (membersResult.rows || []).map((m: any) => ({
                     id: String(m.id), gym_id: String(m.gym_id), plan_id: m.plan_id ? String(m.plan_id) : undefined, member_id: m.member_id ? String(m.member_id) : undefined, name: m.name ? String(m.name) : undefined, email: m.email ? String(m.email) : undefined, membership_status: m.membership_status ? String(m.membership_status) : undefined, created_at: m.created_at ? String(m.created_at) : undefined, age: typeof m.age === 'number' ? m.age : undefined, phone_number: m.phone_number ? String(m.phone_number) : undefined, join_date: m.join_date ? String(m.join_date) : undefined, expiry_date: m.expiry_date ? String(m.expiry_date) : undefined,
                     plans: m.plan_name_joined ? { plan_name: m.plan_name_joined, price: m.plan_price_joined } : null,
                 }));
@@ -150,12 +150,12 @@ export default function GymDetailPage() {
             setIsLoading(prev => ({ ...prev, members: false }));
 
             // Plans
-            if (plansResult.error) { toast({ title: "Error Fetching Plans", description: plansResult.error.message, variant: "warning" }); }
+            if (plansResult.error) { toast({ title: "Error Fetching Plans", description: plansResult.error.message, variant: "destructive" }); }
             else setPlans(plansResult.rows || []);
             setIsLoading(prev => ({ ...prev, plans: false }));
 
             // Check-ins
-            if (checkInsResult.error) { toast({ title: "Error Fetching Check-ins", description: checkInsResult.error.message, variant: "warning" }); }
+            if (checkInsResult.error) { toast({ title: "Error Fetching Check-ins", description: checkInsResult.error.message, variant: "destructive" }); }
             else {
                 const typedCheckIns = (checkInsResult.rows || []).map((c: any) => ({
                     ...c,
@@ -166,7 +166,7 @@ export default function GymDetailPage() {
             setIsLoading(prev => ({ ...prev, checkIns: false }));
 
             // Announcements
-            if (announcementsResult.error) { toast({ title: "Error Fetching Announcements", description: announcementsResult.error.message, variant: "warning" }); }
+            if (announcementsResult.error) { toast({ title: "Error Fetching Announcements", description: announcementsResult.error.message, variant: "destructive" }); }
             else setAnnouncements(announcementsResult.rows || []);
             setIsLoading(prev => ({ ...prev, announcements: false }));
         } catch (error) {
@@ -204,7 +204,7 @@ export default function GymDetailPage() {
     const handleSavePlan = async (planData: Omit<Plan, 'id' | 'gym_id' | 'created_at'>, id?: string) => {
         startSubmitTransition(async () => {
             const dataToUpsert = { ...planData, id: id || generateUUID(), gym_id: gymId };
-            const safeName = dataToUpsert.plan_name.replace(/'/g, "''");
+            const safeName = (dataToUpsert.plan_name || '').replace(/'/g, "''");
             const safeDesc = dataToUpsert.description ? dataToUpsert.description.replace(/'/g, "''") : '';
             const query = `
             INSERT INTO plans (id, gym_id, plan_name, price, duration_days, description) 
@@ -233,8 +233,8 @@ export default function GymDetailPage() {
     const handleSaveAnnouncement = async (announcementData: Omit<Announcement, 'id' | 'gym_id' | 'created_at'>, id?: string) => {
         startSubmitTransition(async () => {
             const dataToUpsert = { ...announcementData, id: id || generateUUID(), gym_id: gymId };
-            const safeTitle = dataToUpsert.title.replace(/'/g, "''");
-            const safeContent = dataToUpsert.content.replace(/'/g, "''");
+            const safeTitle = (dataToUpsert.title || '').replace(/'/g, "''");
+            const safeContent = (dataToUpsert.content || '').replace(/'/g, "''");
             const query = `
             INSERT INTO announcements (id, gym_id, title, content) 
             VALUES ('${dataToUpsert.id}', '${dataToUpsert.gym_id}', '${safeTitle}', '${safeContent}')
@@ -371,7 +371,7 @@ export default function GymDetailPage() {
                     if (emailResult.success) {
                         toast({ title: "Notification Sent", description: `Owner notified about status change to ${newStatus}.` });
                     } else {
-                        toast({ title: "Notification Failed", description: `Could not notify owner: ${emailResult.error}`, variant: "warning" });
+                        toast({ title: "Notification Failed", description: `Could not notify owner: ${emailResult.error}`, variant: "destructive" });
                     }
                 }
             } catch (error) {
@@ -530,7 +530,7 @@ export default function GymDetailPage() {
             />
 
             <AddEditAnnouncementDialog
-                isOpen={dialogState.isOpen && (dialogState.type === 'add-announcement' || dialogState.type === 'edit-announcement')}
+                isOpen={!!(dialogState.isOpen && (dialogState.type === 'add-announcement' || dialogState.type === 'edit-announcement'))}
                 onOpenChange={closeDialog}
                 onSave={handleSaveAnnouncement}
                 isSaving={isSubmitting}
@@ -538,7 +538,7 @@ export default function GymDetailPage() {
             />
 
             <AddEditMemberDialog
-                isOpen={dialogState.isOpen && (dialogState.type === 'add-member' || dialogState.type === 'edit-member')}
+                isOpen={!!(dialogState.isOpen && (dialogState.type === 'add-member' || dialogState.type === 'edit-member'))}
                 onOpenChange={closeDialog}
                 onSave={handleSaveMember}
                 isSaving={isSubmitting}
@@ -547,7 +547,7 @@ export default function GymDetailPage() {
             />
 
             <DeleteConfirmationDialog
-                isOpen={dialogState.isOpen && dialogState.type?.startsWith('delete-')}
+                isOpen={!!(dialogState.isOpen && dialogState.type?.startsWith('delete-'))}
                 onOpenChange={closeDialog}
                 onConfirm={handleDelete}
                 isPending={isSubmitting}

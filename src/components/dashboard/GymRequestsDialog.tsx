@@ -112,7 +112,7 @@ export function GymRequestsDialog({ onGymApproved, existingGymFormattedIds }: Gy
 
                 if (requestUpdateError) {
                     // This toast is important for debugging RLS issues.
-                    toast({ title: "Database Warning", description: `Gym created, but failed to update request status: ${requestUpdateError.message}. Check RLS policies.`, variant: 'warning' });
+                    toast({ title: "Database Warning", description: `Gym created, but failed to update request status: ${requestUpdateError.message}. Check RLS policies.`, variant: 'destructive' });
                     console.error("Failed to update request status:", requestUpdateError);
                 }
 
@@ -124,7 +124,7 @@ export function GymRequestsDialog({ onGymApproved, existingGymFormattedIds }: Gy
                 });
 
                 if (!emailResult.success) {
-                    toast({ title: "Email Failed", description: emailResult.error || "Gym created, but failed to send welcome email.", variant: 'warning' });
+                    toast({ title: "Email Failed", description: emailResult.error || "Gym created, but failed to send welcome email.", variant: 'destructive' });
                 }
 
                 toast({ title: "Gym Approved", description: `"${newGym.name}" has been created successfully.` });
@@ -166,7 +166,7 @@ export function GymRequestsDialog({ onGymApproved, existingGymFormattedIds }: Gy
                 });
 
                 if (!emailResult.success) {
-                    toast({ title: "Email Failed", description: emailResult.error || "Request rejected, but failed to send rejection email.", variant: 'warning' });
+                    toast({ title: "Email Failed", description: emailResult.error || "Request rejected, but failed to send rejection email.", variant: 'destructive' });
                 }
 
                 toast({ title: "Request Rejected", description: `Request for "${request.gym_name}" has been rejected.` });

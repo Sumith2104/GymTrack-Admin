@@ -47,7 +47,7 @@ export function PlansTable({ plans, isLoading, onAdd, onEdit, onDelete }: PlansT
     if (value === undefined) return '₹0.00';
     return value.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
   };
-  
+
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -72,7 +72,7 @@ export function PlansTable({ plans, isLoading, onAdd, onEdit, onDelete }: PlansT
           <Package size={48} className="text-muted-foreground mb-4" />
           <h3 className="text-xl font-semibold mb-2">No Plans Found</h3>
           <p className="text-muted-foreground">
-             {searchTerm ? `Your search for "${searchTerm}" did not return any results.` : 'This gym currently has no membership plans configured.'}
+            {searchTerm ? `Your search for "${searchTerm}" did not return any results.` : 'This gym currently has no membership plans configured.'}
           </p>
         </div>
       ) : (
@@ -92,7 +92,7 @@ export function PlansTable({ plans, isLoading, onAdd, onEdit, onDelete }: PlansT
                 <TableRow key={plan.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell className="font-medium">{plan.plan_name || 'N/A'}</TableCell>
                   <TableCell>{formatCurrency(plan.price)}</TableCell>
-                  <TableCell>{plan.duration_months ? `${plan.duration_months} month(s)` : 'N/A'}</TableCell>
+                  <TableCell>{plan.duration_days ? `${plan.duration_days} day(s)` : 'N/A'}</TableCell>
                   <TableCell>
                     <Badge variant={plan.is_active ? 'default' : 'secondary'} className={plan.is_active ? 'bg-green-500/20 text-green-700 dark:bg-green-700/30 dark:text-green-400' : 'bg-muted text-muted-foreground'}>
                       {plan.is_active ? 'Active' : 'Inactive'}

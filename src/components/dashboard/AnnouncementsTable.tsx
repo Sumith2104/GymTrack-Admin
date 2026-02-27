@@ -29,9 +29,9 @@ export function AnnouncementsTable({ announcements, isLoading, onAdd, onEdit, on
 
   const filteredAnnouncements = useMemo(() => {
     if (!searchTerm) return announcements;
-    return announcements.filter(ann => 
+    return announcements.filter(ann =>
       ann.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ann.message?.toLowerCase().includes(searchTerm.toLowerCase())
+      ann.content?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, announcements]);
 
@@ -46,30 +46,30 @@ export function AnnouncementsTable({ announcements, isLoading, onAdd, onEdit, on
 
   return (
     <div>
-        <div className="flex items-center justify-between mb-4">
-            <div className="relative w-full max-w-sm">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                type="text"
-                placeholder="Filter by title or message..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10"
-                />
-            </div>
-            <Button onClick={onAdd}>
-                <PlusCircle size={18} className="mr-2" />
-                Add Announcement
-            </Button>
+      <div className="flex items-center justify-between mb-4">
+        <div className="relative w-full max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Filter by title or message..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10"
+          />
         </div>
+        <Button onClick={onAdd}>
+          <PlusCircle size={18} className="mr-2" />
+          Add Announcement
+        </Button>
+      </div>
 
       {filteredAnnouncements.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 text-center bg-card-foreground/5 p-6 rounded-lg">
-            <Megaphone size={48} className="text-muted-foreground mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No Announcements Found</h3>
-            <p className="text-muted-foreground">
-              {searchTerm ? `Your search for "${searchTerm}" did not return any results.` : 'There are no announcements for this gym.'}
-            </p>
+          <Megaphone size={48} className="text-muted-foreground mb-4" />
+          <h3 className="text-xl font-semibold mb-2">No Announcements Found</h3>
+          <p className="text-muted-foreground">
+            {searchTerm ? `Your search for "${searchTerm}" did not return any results.` : 'There are no announcements for this gym.'}
+          </p>
         </div>
       ) : (
         <div className="rounded-lg border shadow-sm overflow-hidden">
@@ -86,7 +86,7 @@ export function AnnouncementsTable({ announcements, isLoading, onAdd, onEdit, on
               {filteredAnnouncements.map((announcement) => (
                 <TableRow key={announcement.id} className="hover:bg-muted/50 transition-colors">
                   <TableCell className="font-medium">{announcement.title || 'N/A'}</TableCell>
-                  <TableCell>{announcement.message || 'N/A'}</TableCell>
+                  <TableCell>{announcement.content || 'N/A'}</TableCell>
                   <TableCell>
                     {announcement.created_at ? format(new Date(announcement.created_at), 'dd MMM yyyy') : 'N/A'}
                   </TableCell>
